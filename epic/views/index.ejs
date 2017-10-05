@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Epic Number Game</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style media="screen">
+      .container{
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h1>This button has been pushed <span id="num">0</span> time(s)</h1>
+        </div>
+      </div><br><br><br>
+
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h4>Push the button to update the count!</h4>
+          <button type="button" class="btn btn-primary btn-lg" id="btn">Push the epic button</button>
+        </div>
+      </div><br>
+      <button type="button" class="btn btn-secondary btn-lg" id="reset">Reset</button>
+    </div>
+
+  </body>
+  <script type="text/javascript">
+    $(document).ready(function (){
+
+      var socket = io.connect();
+      var count = 0;
+      $('#btn').click(function (e){
+
+      e.preventDefault();
+
+      socket.emit("button_click", {count: count});
+
+      });
+
+      socket.on('server_response', function (data){
+        count = data.response;
+        // console.log(count);
+        $('#num').html(count);
+      });
+
+      $('#reset').click(function (e){
+        e.preventDefault();
+        socket.emit("reset_click", {count: count});
+      });
+
+
+
+    })
+  </script>
+</html>
