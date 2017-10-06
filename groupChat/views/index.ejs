@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+
+        var name = prompt("What is your name?")
+        var socket = io.connect();
+
+        socket.emit("name_input", {data: name});
+
+        socket.on("server_response", function (data){
+          // console.log(data.response);
+          $("#box").append("<div class='col-sm-3 col-md-3 col-lg-3'><div class='input'>"+data.response+"</div></div>");
+        });
+        socket.on("show_users", function (data) {
+          console.log(data.users);
+
+          for (key in data.users) {
+
+            $("#box").append("<div class='col-sm-3 col-md-3 col-lg-3'><div class='input'>"+data.users[key]+"</div></div>");
+
+          }
+        })
+      })
+    </script>
+    <style media="screen">
+      .wrapper{
+        padding: 2% 4% 2% 4%;
+      }
+      .input{
+        border: 1px solid grey;
+        padding: 5px 8px 5px 8px;
+        width: 99%;
+        height: 100px;
+      }
+      input {
+        width: 90%;
+      }
+      #box{
+
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="wrapper">
+      <div class="row" id="box">
+
+      </div>
+    </div>
+
+  </body>
+</html>
